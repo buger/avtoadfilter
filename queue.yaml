@@ -1,0 +1,11 @@
+queue:
+- name: default
+  rate: 1/s
+  bucket_size: 1
+
+- name: avtoru
+  rate: 1/s
+  bucket_size: 1
+
+- name: quick
+  rate: 10/s

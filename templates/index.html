@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Аренда квартир от хозяина</title>       
+        <link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,bold' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssfonts/fonts-min.css">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssbase/base-context-min.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/css/facebox.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="/css/style.css?30" />
+        <meta name='yandex-verification' content='6d4fbace966b31d5' />
+    </head>
+    <body>  
+        <div id="header">
+            <div>
+                <a href="/" class='logo'><span class='first'>Rent</span><span class='second'>Filter</span></a>
+
+                <div class="social">
+                    <a href="http://vkontakte.ru/rentfilter" class="vkontakte">Вконтакте</a>
+                    <a href="http://www.facebook.com/pages/RentFilter/202459219787387" class="facebook">Facebook</a>
+                    <a href="http://twitter.com/rentfilter" class="twitter">Twitter</a>
+                </div>                        
+            </div>
+        </div>
+        <div id="about">
+            <div>
+                <h1>Снимите квартиру<div>без помощи риэлторов</div></h1>
+                <p class='desc'>
+                Не хотите платить агентам по недвижимости комиссию? RentFilter поможет снять квартиру без посредников. Наши роботы фильтруют объявления об аренде помещений и оставляют только те, которые подают сами хозяева квартир.
+                </p>
+                <div class='images' style='display: none'><div></div></div>
+                <a id='thanks' rel="facebox" href="#thanks_form">Сказать "Спасибо"</a>
+            </div>
+        </div>
+        <div id="thanks_form" style="display: none">
+            <div class='thanks_form'>
+                <h2>Помощь проекту RentFilter.ru</h2>
+                <div class='desc'>Если благодаря нашему сайту вы успешно нашли себе квартиру для аренды, вы можете поблагодарить нас за помощь. Это будет вдохновлять нас на то, чтобы делать этот сайт еще более удобным и полезным.</div>
+                <!--
+                <fieldset class="fastspring">
+                    <legend>Карта или PayPal</legend>
+                    <div class='amount'>$<input value="20" class="donation"/><input type="button" value="Оплатить" class="send_donation"/></div>
+                </fieldset>
+                -->
+                <fieldset class="yandex">
+                    <legend>Яндекс.Деньги</legend>
+                    <div class='account'>41001903998889</div> <a href="http://money.yandex.ru/prepaid/">Как внести деньги</a>
+                </fieldset>
+
+                {% if admin %}
+                <fieldset class="payment">
+                    <form action="http://www.onlinedengi.ru/wmpaycheck.php" method="post">
+                        <input type="hidden" name="project" value="608">
+                        <input type="hidden" name="source" value="608">
+                        <input type="hidden" name="order_id" value="demo">
+                        Ваш ник: <input type="text" name="nickname" value="demo">
+                        Сумма к оплате, в валюте платёжной системы: <input type="text" name="amount" value="100">
+                        Способ оплаты: 
+                        <select name="mode_type">
+                            <option value="49">Банковские карты</option>
+                            <option value="4">WebMoney WMB</option>
+                            <option value="3">WebMoney WME</option>
+                            <option value="7">Яндекс.Деньги</option>
+                            <option value="60">Банковские карты</option>
+                        </select>
+                        <input type="submit" value="Оплатить!">
+                    </form>
+                </fieldset>
+                {% endif %}
+            </div>
+        </div>
+        <div id="wrapper">            
+            {% if admin %}
+            <form action="/admin/agent_phones" method="POST" style="text-align: left">
+                <label>Телефоны риэлторов</label>
+                <br/>
+                <input placeholder="Причина" name="source" type="text" />
+                <br/>
+                <input placeholder="Регион" name="region" type="text" value='msk' />
+                <br/>
+                <textarea name="phones" style="width: 600px; height: 200px;"></textarea>
+                <br/>
+                <input type="submit" />
+            </form>
+            {% endif %}
+            <div class="relative">
+                <div id="left">
+                    <div id="left_header">
+                        <div class="select_town">
+                            {% ifequal region 'spb' %}
+                            <span class='name'>Санкт-Петербург</span>
+                            {% else %}
+                            <span class='name'>Москва</span>
+                            {% endifequal%}
+                            <span class='arrow'>▾</span>
+
+                            <ul class="towns" style="display: none">
+                                {% ifequal region 'spb' %}
+                                <li data-region="msk">Москва</li>
+                                {% else %}
+                                <li data-region="spb">Санкт-Петербург</li>
+                                {% endifequal %}
+                                <li id="other_towns">Другой город</li>
+                            </ul>
+                        </div>
+                        
+                        <a href="http://feeds.feedburner.com/rentfilter/HQvl" class='rss' style="display: none"></a>
+
+                        <div class="filter" {% if hide_filter %}style="display:none"{% endif %}>
+                            <label>Тид аренды:</label>
+                            <a href="javascript:;" class='active' data-filter='monthly'>Долгосрочная</a>
+                            <a href="javascript:;" data-filter='hourly'>Посуточная</a>
+                        </div>
+
+                    </div>
+                        {% if admin %}
+                        <br />
+                        <br />
+                        <label>Метро:</label>
+                        <select id='metro'>
+                            {% for item in metro_list %}
+                            <option value="{{item.0}}">{{item.1.1}}</option>
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+
+                    <ul class="estate_links">
+                        {% include 'ads.html' %}
+                        <li class="load_more" {% if hide_controls %}style='display:none'{% endif %}><a data-cursor='{{cursor}}' data-start-from='{{start_from}}' data-region='{{region}}'>Загрузить еще</a></li>                        
+                    </ul>
+                </div>
+                <div id="right">
+                    <div class='links'>
+                        <span class='title'>Как снять квартиру от хозяина</span> 
+                        <ol>
+                            <li><a href="/faq#call">Связаться с хозяином</a></li>
+                            <li><a href="/faq#examine">Изучить документы на квартиру</a></li>
+                            <li><a href="/faq#sign">Подписать договор</a></li>
+                        </ol>
+                        <div class="title" style="margin-top: 50px; font-size: 14px;">Карта города</div>
+                        {% ifequal region 'spb' %}
+                        <a href="http://goo.gl/maps/AYKn" target="_blank" class='map'><img src='/images/spb_map.png'/></a>
+                        {% else %}
+                        <a href="http://maps.google.ru/?ll=55.744893,37.65976&spn=0.219531,0.617294&z=11&lci=transit_comp" target="_blank" class='map'><img src='/images/msk_map.png'/></a>
+                        {% endifequal %}
+                        <div class="title" style="margin-top: 50px; font-size: 14px;">Карта метро</div>
+                        {% ifequal region 'spb' %}
+                        <a href="http://metro.yandex.ru/spb/" target="_blank" class='map'><img src='http://yandex.st//metro-data/maps/spb.gif?1.0.17' /></a>
+                        {% else %}
+                        <a href="http://metro.yandex.ru/moscow/" target="_blank" class='map'><img src='http://yandex.st//metro-data/maps/moscow.gif?1.0.17' /></a>
+                        {% endifequal %}
+
+                        {% ifequal region 'spb' %}
+                        <div class="ad" style="margin-top: 50px; font-size: 13px;">
+                            <div style="border-bottom: 1px solid #ccc">Реклама</div>
+                            <br/>
+                            <p style="color: #333; line-height: 150%;">
+                            Хотите сделать ремонт? Звоните!
+                            </br>
+                            Делаем быстро, качественно и не дорого!
+                            </br>
+                            89215428009, 89862925248 
+                            </p>
+                        </div>
+                        {% endifequal %}
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div id="footer">
+            <h3>Следите за нами в социальных сетях</h3>
+            <div class="widgets">
+                <div id="vkontakte">
+                    <script type="text/javascript" src="http://userapi.com/js/api/openapi.js?25"></script>
+
+                    <!-- VK Widget -->
+                    <div id="vk_groups"></div>
+                    <script type="text/javascript">
+                    VK.Widgets.Group("vk_groups", {mode: 0, width: "400", height: "250"}, 26047335);
+                    </script>
+                </div>
+                <div id="twitter">
+                    <a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-via="rentfilter">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+                </div>
+                <div id="facebook">
+                    <iframe src="http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FRentFilter%2F202459219787387&amp;width=400&amp;colorscheme=light&amp;show_faces=true&amp;stream=false&amp;header=true&amp;height=250" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:400px; height:250px;" allowTransparency="true"></iframe>
+                </div>
+                <div class="shower">
+                    <div></div>
+                </div>
+                <div class="about_us" name="about">
+                    <h3>О проекте</h3>
+                    <p>Зайдя на любой сайт с объявлениями об аренде квартир, вам придется позвонить не по одному десятку номеров, прежде чем найти объявление действительно от владельца квартиры, а не от риэлторского агентства. Но и это может случиться, только если вам очень повезет.</p>
+                    <p>RentFilter поможет снять квартиру без посредников. Наши роботы фильтруют объявления об аренде помещений и оставляют только те, которые подают сами хозяева квартир.</p>
+                    <p style="white-space:nowrap;">Если у вас возникли вопросы, пишите нам <a href="http://rentfilter.copiny.com/">сюда</a> или на почту <a href='mailto:hello@rentfilter.ru'>hello@rentfilter.ru</a></p>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <p>
+                        <a href="javascript:;" class='move_up'>Вверх!</a>                                                
+                        <span class="api">А еще у нас есть <a href="/api">API</a></span>
+                    </p>
+                </div>
+                <div class="clear legal_links">
+                    <a href="/rules">Лицензия на поиск</a>
+                    <a href="/tos">Пользовательское соглашение</a>
+                </div>
+            </div>
+            <div class="clear admin_links">
+                {% if admin %}
+                <a href="{{logout_url}}">Выйти</a>
+                {% else %}
+                <a href="{{login_url}}">Вход для администраторов</a>
+                {% endif %}
+            </div>
+        </div>
+        <div id="other_towns_popup" style="display:none">
+            <div class='other_towns'>
+                <h2>RentFilter в вашем городе</h2>
+                <p>В данный момент мы работаем в тестовом режиме, только в Санкт-Петербурге и Москве. Вы можете подписаться на наши новости по ниже следующим ссылкам.</p>
+
+                <div class="social">
+                    <a href="http://vkontakte.ru/rentfilter" class="vkontakte">Вконтакте</a>
+                    <a href="http://www.facebook.com/pages/RentFilter/202459219787387" class="facebook">Facebook</a>
+                    <a href="http://twitter.com/rentfilter" class="twitter">Twitter</a>
+                </div>                        
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+        <script src="/js/images.js"></script>
+        <script src="/js/scale.raphael.js"></script>
+        <script src="/js/raphael-min.js"></script>
+        <script src="/js/jquery.tooltip.min.js"></script>        
+        <script src="/js/facebox.js"></script>
+        <script src="/js/app.js?15"></script>
+        <script src="/js/api.js?8"></script>
+
+        <!-- Yandex.Metrika counter --><div style="display:none;"><script type="text/javascript">(function(w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter7309270 = new Ya.Metrika({id:7309270, enableAll: true}); } catch(e) { } }); })(window, 'yandex_metrika_callbacks');</script></div><script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script><noscript><div><img src="//mc.yandex.ru/watch/7309270" style="position:absolute; left:-9999px;" alt="" /></div></noscript><!-- /Yandex.Metrika counter -->
+
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'rentfilter'; // required: replace example with your forum shortname
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var s = document.createElement('script'); s.async = true;
+                s.type = 'text/javascript';
+                s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+                (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+            }());
+        </script>
+
+<!-- begin olark code --><script type='text/javascript'>/*{literal}<![CDATA[*/window.olark||(function(i){var e=window,h=document,a=e.location.protocol=="https:"?"https:":"http:",g=i.name,b="load";(function(){e[g]=function(){(c.s=c.s||[]).push(arguments)};var c=e[g]._={},f=i.methods.length; while(f--){(function(j){e[g][j]=function(){e[g]("call",j,arguments)}})(i.methods[f])} c.l=i.loader;c.i=arguments.callee;c.f=setTimeout(function(){if(c.f){(new Image).src=a+"//"+c.l.replace(".js",".png")+"&"+escape(e.location.href)}c.f=null},20000);c.p={0:+new Date};c.P=function(j){c.p[j]=new Date-c.p[0]};function d(){c.P(b);e[g](b)}e.addEventListener?e.addEventListener(b,d,false):e.attachEvent("on"+b,d); (function(){function l(j){j="head";return["<",j,"></",j,"><",z,' onl'+'oad="var d=',B,";d.getElementsByTagName('head')[0].",y,"(d.",A,"('script')).",u,"='",a,"//",c.l,"'",'"',"></",z,">"].join("")}var z="body",s=h[z];if(!s){return setTimeout(arguments.callee,100)}c.P(1);var y="appendChild",A="createElement",u="src",r=h[A]("div"),G=r[y](h[A](g)),D=h[A]("iframe"),B="document",C="domain",q;r.style.display="none";s.insertBefore(r,s.firstChild).id=g;D.frameBorder="0";D.id=g+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){D.src="javascript:false"} D.allowTransparency="true";G[y](D);try{D.contentWindow[B].open()}catch(F){i[C]=h[C];q="javascript:var d="+B+".open();d.domain='"+h.domain+"';";D[u]=q+"void(0);"}try{var H=D.contentWindow[B];H.write(l());H.close()}catch(E){D[u]=q+'d.write("'+l().replace(/"/g,String.fromCharCode(92)+'"')+'");d.close();'}c.P(2)})()})()})({loader:(function(a){return "static.olark.com/jsclient/loader0.js?ts="+(a?a[1]:(+new Date))})(document.cookie.match(/olarkld=([0-9]+)/)),name:"olark",methods:["configure","extend","declare","identify"]});
+/* custom configuration goes here (www.olark.com/documentation) */
+olark.identify('8037-138-10-8448');/*]]>{/literal}*/</script>
+<!-- end olark code -->        
+
+<script type="text/javascript">
+  var _kmq = _kmq || [];
+  function _kms(u){
+    setTimeout(function(){
+      var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true;
+      s.src = u; f.parentNode.insertBefore(s, f);
+    }, 1);
+  }
+  _kms('//i.kissmetrics.com/i.js');_kms('//doug1izaerwt3.cloudfront.net/56d5826bacafb03af035519fca681465654a3815.1.js');
+</script>
+    </body>
+</html>
