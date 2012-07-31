@@ -50,7 +50,10 @@ route("/avto/ads", AvtoruTask)
 
 import time
 import logging
+
 from datetime import timedelta
+from datetime import datetime
+from datetime import time as datetime_time
 
 class ProcessAd(AppHandler):
     def post(self):
@@ -67,9 +70,12 @@ class ProcessAd(AppHandler):
                 logging.info("Processing avto ad: %s, %s" % (url, parser.phone))
                 logging.info(parser.date)
 
+                ad_date = (datetime.now()+timedelta(hours=4)).date()
+                ad_date = datetime.combine(ad_date, datetime_time())
+
                 ad = avtoru_parser.AvtoAd(key_name = "%s_%d" % (url, time.time()),
                                           phone = parser.phone,
-                                          created_at = parser.date)
+                                          created_at = ad_date)
 
                 ad.put()
             else:
@@ -82,6 +88,7 @@ route("/avto/ad", ProcessAd)
 
 from datetime import date
 from datetime import datetime
+
 
 def query_counter(q, cursor=None, limit=1000):
     if cursor:
@@ -100,7 +107,10 @@ class AvtoList(AppHandler):
         yesterday = query_counter(avtoru_parser.AvtoAd.all().order('-created_at').filter('created_at =', today_date-timedelta(1)))
 
 
-        self.render_template("avto_ads.html", {'today':today, 'yesterday':yesterday })
+        before_yesterday = query_counter(avtoru_parser.AvtoAd.all().order('-created_at').filter('created_at =', today_date-timedelta(2)))
+
+
+        self.render_template("avto_ads.html", {'today':today, 'yesterday':yesterday, 'before_yesterday':before_yesterday })
 
 route("/", AvtoList)
 
@@ -114,6 +124,8 @@ class AvtoDownload(AppHandler):
             _date = date.today()
         elif self.request.get('date') == 'yesterday':
             _date = date.today()-timedelta(1);
+        elif self.request.get('date') == 'before_yesterday':
+            _date = date.today()-timedelta(2);
         else:
             _date = parser.parse(self.request.get('date'))
 
