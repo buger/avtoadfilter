@@ -9,10 +9,10 @@ from google.appengine.api import taskqueue
 
 class AvtoruCron(AppHandler):
     def get(self):
-        categories = [15, 31, 32, 33, 34, 16]
+        categories = [15, 31, 32, 33, 34, 16, 1]
 
         for cat in categories:
-            url = "http://all.auto.ru/list/?category_id="+str(cat)+"&section_id=1&subscribe_id=&filter_id=&mark_id=0&year%5B1%5D=&year%5B2%5D=&color_id=&price_usd%5B1%5D=&price_usd%5B2%5D=&currency_key=RUR&body_key=&run%5B1%5D=&run%5B2%5D=&engine_key=0&engine_volume%5B1%5D=&engine_volume%5B2%5D=&drive_key=&engine_power%5B1%5D=&engine_power%5B2%5D=&transmission_key=0&used_key=&wheel_key=&custom_key=&available_key=&change_key=&owner_pts=&stime=0&country_id=1&has_photo=0&region%5B%5D=89&region%5B%5D=32&region_id=89&sort_by=2&output_format=1&client_id=0&extras%5B1%5D=0&extras%5B2%5D=0&extras%5B3%5D=0&extras%5B4%5D=0&extras%5B5%5D=0&extras%5B6%5D=0&extras%5B7%5D=&extras%5B8%5D=0&extras%5B9%5D=0&extras%5B10%5D=0&extras%5B11%5D=0&extras%5B12%5D=&extras%5B13%5D=0&extras%5B14%5D=0&extras%5B15%5D=0&extras%5B16%5D=0&extras%5B17%5D=0&extras%5B18%5D=&extras%5B19%5D=&extras%5B20%5D=&extras%5B21%5D=&extras%5B22%5D=&extras%5B23%5D=0&extras%5B24%5D=0&extras%5B25%5D=&extras%5B26%5D=&extras%5B27%5D=0&extras%5B28%5D=0&extras%5B29%5D=&submit=%D0%9D%D0%B0%D0%B9%D1%82%D0%B8"
+            url = "http://all.auto.ru/list/?category_id="+str(cat)+"&section_id=1&subscribe_id=&filter_id=&mark_id=0&year%5B1%5D=&year%5B2%5D=&color_id=&price_usd%5B1%5D=&price_usd%5B2%5D=&currency_key=RUR&body_key=&run%5B1%5D=&run%5B2%5D=&engine_key=0&engine_volume%5B1%5D=&engine_volume%5B2%5D=&drive_key=&engine_power%5B1%5D=&engine_power%5B2%5D=&transmission_key=0&used_key=&wheel_key=&custom_key=&available_key=&change_key=&owner_pts=&stime=2&country_id=1&has_photo=0&region%5B%5D=89&region%5B%5D=32&region_id=89&sort_by=2&output_format=1&client_id=0&extras%5B1%5D=0&extras%5B2%5D=0&extras%5B3%5D=0&extras%5B4%5D=0&extras%5B5%5D=0&extras%5B6%5D=0&extras%5B7%5D=&extras%5B8%5D=0&extras%5B9%5D=0&extras%5B10%5D=0&extras%5B11%5D=0&extras%5B12%5D=&extras%5B13%5D=0&extras%5B14%5D=0&extras%5B15%5D=0&extras%5B16%5D=0&extras%5B17%5D=0&extras%5B18%5D=&extras%5B19%5D=&extras%5B20%5D=&extras%5B21%5D=&extras%5B22%5D=&extras%5B23%5D=0&extras%5B24%5D=0&extras%5B25%5D=&extras%5B26%5D=&extras%5B27%5D=0&extras%5B28%5D=0&extras%5B29%5D=&submit=%D0%9D%D0%B0%D0%B9%D1%82%D0%B8"
 
             taskqueue.add(queue_name = 'avtoru', url="/avto/ads", params = {'base_url': url})
 
