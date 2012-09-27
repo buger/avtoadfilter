@@ -47,7 +47,7 @@ class MozillaEmulator(object):
         txheaders = {
             'Accept':'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
             'Accept-Language':'ru,en;q=0.8,ru-ru;q=0.5,en-us;q=0.3',
-            #            'Accept-Encoding': 'gzip, deflate',
+                        #'Accept-Encoding': 'gzip, deflate',
             'Accept-Charset': 'utf-8,cp1251;q=0.7,*;q=0.7',
             'Keep-Alive': '300',
             'Connection': 'keep-alive',
@@ -59,6 +59,20 @@ class MozillaEmulator(object):
 
         self.cookies.add_cookie_header(req)
 
+        import Cookie
+        c = Cookie.SimpleCookie()
+        c.name = "autoru_sid"
+        c.value="eadae6c5fe0c6a3e_59dee844f48d411f4b17d502b38094f7"
+        c.expires = 0
+        c.path = "/"
+        c.domain = ".auto.ru"
+        c.version = 0
+        c.secure = False
+        c.is_expired = lambda x: False
+        c.port = "80"
+
+        self.cookies.set_cookie(c)
+
         if forbid_redirect:
             redirector = HTTPNoRedirector()
         else:
@@ -68,7 +82,7 @@ class MozillaEmulator(object):
         https_handler = urllib2.HTTPSHandler(debuglevel=self.debug)
 
         u = urllib2.build_opener(http_handler,https_handler, urllib2.HTTPCookieProcessor(self.cookies),redirector)
-        u.addheaders = [('User-Agent','Opera/9.80 (X11; Linux i686; U; ja) Presto/2.7.62 Version/11.01')]
+        u.addheaders = [('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1')]
 
 
         if not postdata is None:

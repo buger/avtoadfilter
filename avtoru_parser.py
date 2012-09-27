@@ -44,7 +44,9 @@ class AvtoruAdParser:
             content = MozillaEmulator().download(phone_url)
             self.phone = rMOBILE_PHONE.search(content).group(0)
 
+
         self.phone = format_phone(self.phone, False)
+
 
         self.date = self.page.find('div', 'columns sale-counter').find('strong').string
         self.date = datetime.datetime.strptime(self.date, "%d.%m.%Y")
